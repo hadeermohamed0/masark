@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:testm/locarb.dart';
@@ -15,59 +17,6 @@ class loc extends StatefulWidget {
 class _LocScreenState extends State<loc> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
-
-  Future<void> _checkAndRequestLocationPermission() async {
-    var status = await Permission.location.status;
-
-    if (status.isDenied) {
-      // إذا كان الإذن مرفوضًا، نطلبه
-      status = await Permission.location.request();
-    }
-
-    if (status.isPermanentlyDenied) {
-      // إذا تم رفض الإذن نهائيًا، نوجه المستخدم إلى إعدادات التطبيق
-      await openAppSettings();
-    } else if (status.isGranted) {
-      // إذا تم منح الإذن، يمكنك الوصول إلى الموقع
-      _useLocation();
-    } else if (status.isRestricted) {
-      // إذا كان الإذن محدودًا
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("الوصول إلى الموقع محدود."),
-        ),
-      );
-    }
-  }
-
-  void _useLocation() {
-
-    print("Location access granted!");
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _checkAndRequestLocationPermission();
-
-    _controller = AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _fadeAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();  //  AnimationController
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +103,8 @@ class _LocScreenState extends State<loc> with TickerProviderStateMixin {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10, right: 10, left: 20, bottom: 10),
+                      padding: const EdgeInsets.only(
+                          top: 10, right: 10, left: 20, bottom: 10),
                       child: Text(
                         'We use your location to help find nearby stations and give you the best directions.',
                         maxLines: 3,
@@ -172,6 +122,30 @@ class _LocScreenState extends State<loc> with TickerProviderStateMixin {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); //  AnimationController
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAndRequestLocationPermission();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _fadeAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
       ),
     );
   }
@@ -206,5 +180,36 @@ class _LocScreenState extends State<loc> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> _checkAndRequestLocationPermission() async {
+    var status = await Permission.location.status;
+
+    if (status.isDenied) {
+      // إذا كان الإذن مرفوضًا، نطلبه
+      status = await Permission.location.request();
+    }
+
+    if (status.isPermanentlyDenied) {
+      // إذا تم رفض الإذن نهائيًا، نوجه المستخدم إلى إعدادات التطبيق
+      await openAppSettings();
+    } else if (status.isGranted) {
+      // إذا تم منح الإذن، يمكنك الوصول إلى الموقع
+      // myCurrentPostion = await Geolocator.getCurrentPosition();
+      // log(myCurrentPostion!.latitude.toString());
+      // log(myCurrentPostion!.longitude.toString());
+      _useLocation();
+    } else if (status.isRestricted) {
+      // إذا كان الإذن محدودًا
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("الوصول إلى الموقع محدود."),
+        ),
+      );
+    }
+  }
+
+  void _useLocation() {
+    print("Location access granted!");
   }
 }
