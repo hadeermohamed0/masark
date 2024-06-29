@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-
 import 'dis.dart';
 
 class MyImage extends StatelessWidget {
@@ -31,8 +29,8 @@ class MyImage extends StatelessWidget {
 
 class normal extends StatefulWidget {
   static const String screenRoute = 'normal_screen';
-
-  normal({Key? key}) : super(key: key);
+  final LatLng? destination;
+  normal({Key? key, this.destination}) : super(key: key);
 
   @override
   State<normal> createState() => _normalState();
@@ -50,7 +48,7 @@ class _normalState extends State<normal> {
   double zoom = 11;
   LatLng center = LatLng(31.04031523059393, 31.347308716649763);
   LatLng myLocatonfirst = LatLng(31.034673246608666, 31.350752243978864);
-  LatLng destination = LatLng(31.04031523059393, 31.347308716649763);
+  late LatLng destination ;
   LatLng from = LatLng(31.23266031597589, 30.235546657192405);
   LatLng to = LatLng(31.232669128863687, 30.030751240155272);
 
@@ -155,6 +153,7 @@ class _normalState extends State<normal> {
 
   @override
   void initState() {
+    destination=widget.destination??LatLng(31.04031523059393, 31.347308716649763);
     // myLocationProvider.getLocation();
     myLocationProvider.requestPermission();
     trackUserLocation();
@@ -619,6 +618,8 @@ class _normalState extends State<normal> {
                                   alignment: Alignment.center,
                                   child: InkWell(
                                     onTap: () {
+                                      log('kkkkkkkkkkkkkkkkkkkk');
+                                      log(destination.toString());
                                       showModalBottomSheet(
                                         context: context,
                                         builder: (context) => Padding(

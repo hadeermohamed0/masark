@@ -1,7 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:testm/disarb.dart';
 import 'package:testm/privacy.dart';
+import 'package:http/http.dart' as http;
 
+import 'normal.dart';
 
 const Color myC = Color(0x93AFD8F3);
 const Color myCc = Color(0xFF0C2A5D);
@@ -23,6 +28,12 @@ class _disState extends State<dis> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(seconds: 3,),
+          (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>normal(destination:LatLng(30.037033,31.238362),),));
+      },
+    );
+    getSearch();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -125,37 +136,34 @@ class _disState extends State<dis> with SingleTickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(
-                            top: 70,
-                          ),
-                          child: AnimatedBuilder(
-                            animation: _animation,
-                            builder: (context, child) => Transform.scale(
-                              scale: _animation.value,
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          top: 70,
+                        ),
+                        child: AnimatedBuilder(
+                          animation: _animation,
+                          builder: (context, child) => Transform.scale(
+                            scale: _animation.value,
+                            child: CircleAvatar(
+                              backgroundColor: myCu.withOpacity(0.1),
+                              radius: 120,
                               child: CircleAvatar(
-                                backgroundColor: myCu.withOpacity(0.1),
-                                radius: 120,
+                                backgroundColor: myCu.withOpacity(0.2),
+                                radius: 115,
                                 child: CircleAvatar(
-                                  backgroundColor: myCu.withOpacity(0.2),
-                                  radius: 115,
+                                  backgroundColor: myCu.withOpacity(0.3),
+                                  radius: 110,
                                   child: CircleAvatar(
-                                    backgroundColor: myCu.withOpacity(0.3),
-                                    radius: 110,
+                                    backgroundColor: myC.withOpacity(.8),
+                                    radius: 105,
                                     child: CircleAvatar(
-                                      backgroundColor: myC.withOpacity(.8),
-                                      radius: 105,
-                                      child: CircleAvatar(
-                                        backgroundColor: myCustomColor,
-                                        radius: 100,
-                                        child: Icon(
-                                          size: 180,
-                                          Icons.mic_none_outlined,
-                                          color: myCc.withOpacity(.7),
-                                        ),
+                                      backgroundColor: myCustomColor,
+                                      radius: 100,
+                                      child: Icon(
+                                        size: 180,
+                                        Icons.mic_none_outlined,
+                                        color: myCc.withOpacity(.7),
                                       ),
                                     ),
                                   ),
@@ -164,7 +172,7 @@ class _disState extends State<dis> with SingleTickerProviderStateMixin {
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -197,4 +205,20 @@ class _disState extends State<dis> with SingleTickerProviderStateMixin {
       ),
     );
   }
+}
+
+getSearch()async{
+  var request = http.Request('GET', Uri.parse('https://a02a-156-197-63-233.ngrok-free.app/SearchView/?search_value=سعد زغلول'));
+
+
+  http.StreamedResponse response = await request.send();
+
+  if (response.statusCode == 200) {
+    log(await response.stream.bytesToString());
+  }
+  else {
+  print(response.reasonPhrase);
+  }
+
+
 }
