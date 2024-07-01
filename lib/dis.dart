@@ -1,11 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:testm/disarb.dart';
 import 'package:testm/privacy.dart';
 import 'package:http/http.dart' as http;
-
 import 'normal.dart';
 
 const Color myC = Color(0x93AFD8F3);
