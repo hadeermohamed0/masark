@@ -135,7 +135,7 @@ class _LocScreenState extends State<loc> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // _checkAndRequestLocationPermission();
+    _checkAndRequestLocationPermission();
 
     _controller = AnimationController(
       duration: const Duration(seconds: 4),
@@ -182,32 +182,32 @@ class _LocScreenState extends State<loc> with TickerProviderStateMixin {
     );
   }
 
-  // Future<void> _checkAndRequestLocationPermission() async {
-  //   var status = await Permission.location.status;
+  Future<void> _checkAndRequestLocationPermission() async {
+    var status = await Permission.location.status;
 
-  //   if (status.isDenied) {
-  //     // إذا كان الإذن مرفوضًا، نطلبه
-  //     status = await Permission.location.request();
-  //   }
+    if (status.isDenied) {
+      // إذا كان الإذن مرفوضًا، نطلبه
+      status = await Permission.location.request();
+    }
 
-  //   if (status.isPermanentlyDenied) {
-  //     // إذا تم رفض الإذن نهائيًا، نوجه المستخدم إلى إعدادات التطبيق
-  //     await openAppSettings();
-  //   } else if (status.isGranted) {
-  //     // إذا تم منح الإذن، يمكنك الوصول إلى الموقع
-  //     // myCurrentPostion = await Geolocator.getCurrentPosition();
-  //     // log(myCurrentPostion!.latitude.toString());
-  //     // log(myCurrentPostion!.longitude.toString());
-  //     _useLocation();
-  //   } else if (status.isRestricted) {
-  //     // إذا كان الإذن محدودًا
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("الوصول إلى الموقع محدود."),
-  //       ),
-  //     );
-  //   }
-  // }
+    if (status.isPermanentlyDenied) {
+      // إذا تم رفض الإذن نهائيًا، نوجه المستخدم إلى إعدادات التطبيق
+      await openAppSettings();
+    } else if (status.isGranted) {
+      // إذا تم منح الإذن، يمكنك الوصول إلى الموقع
+      // myCurrentPostion = await Geolocator.getCurrentPosition();
+      // log(myCurrentPostion!.latitude.toString());
+      // log(myCurrentPostion!.longitude.toString());
+      _useLocation();
+    } else if (status.isRestricted) {
+      // إذا كان الإذن محدودًا
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("الوصول إلى الموقع محدود."),
+        ),
+      );
+    }
+  }
 
   void _useLocation() {
     print("Location access granted!");
